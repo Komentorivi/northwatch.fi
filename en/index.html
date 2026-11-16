@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwatch</title>
+<meta name="description" content="Northwatch is a security operations centre for homes and small businesses: it watches your network around the clock, raises the alarm only when something real happens and explains it in plain language. Monthly subscription.">
+<meta property="og:title" content="Northwatch: a security operations centre for the rest of us">
+<meta property="og:description" content="Real alarms, plain language, one click to act. For homes and small businesses.">
+<meta property="og:image" content="../img/nw-map.webp">
+<link rel="alternate" hreflang="fi" href="https://northwatch.fi/">
+<link rel="alternate" hreflang="en" href="https://northwatch.fi/en/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302060b'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Cpath d='M16 16 23 9' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23d6ecf5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Northwatch: the product's own situation-room look. Abyss + ion cyan; alarm colours only where an alarm is shown. */
+:root{
+  --abyss:#02060b; --deep:#06111a; --glass:rgba(8,22,33,.72); --edge:#16384a; --wire:#1d4458;
+  --ion:#45e3ff; --phos:#6bffb0; --flare:#ff2e55; --amber:#ffb238;
+  --snow:#e6f2f8; --frost:#b9cdd8; --mute:#7a94a3;
+  --cut:14px;
+  --display:'Chakra Petch',system-ui,sans-serif;
+  --body:'Instrument Sans',system-ui,sans-serif;
+  --data:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--abyss);color:var(--frost);font:400 18px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--ion);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ion);outline-offset:3px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);color:var(--snow);margin:0;font-weight:600}
+p{margin:0 0 14px}
+
+/* chamfered glass panel, same language as the product */
+.panel{position:relative;background:var(--glass);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid var(--edge);clip-path:inherit;
+  background:linear-gradient(135deg,rgba(69,227,255,.28) 0,transparent 24px) top left/44px 44px no-repeat,
+             linear-gradient(-45deg,rgba(69,227,255,.28) 0,transparent 24px) bottom right/44px 44px no-repeat}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:5;background:rgba(2,6,11,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(22,56,74,.6)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark svg{width:28px;height:28px}
+.mark b{font:600 20px/1 var(--display);letter-spacing:.36em;color:var(--snow);text-shadow:0 0 16px rgba(69,227,255,.45)}
+.top nav{margin-left:auto;display:flex;gap:26px;font-size:15px}
+.top nav a{color:var(--frost);text-decoration:none}
+.top nav a:hover{color:var(--snow)}
+.top .cta{font:600 15px/1 var(--display);letter-spacing:.04em;color:var(--abyss);background:var(--ion);padding:11px 16px;text-decoration:none;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.top .cta{white-space:nowrap}
+@media (max-width:860px){.top nav a:not(.cta):not(.lang){display:none}}
+@media (max-width:480px){.mark b{letter-spacing:.22em;font-size:17px}.top .cta{font-size:14px;padding:10px 12px}
+  .hero .shot img{aspect-ratio:4/3;object-fit:cover;object-position:50% 45%}}
+
+.top .lang{font:500 14px var(--data);color:var(--mute);text-decoration:none}.top .lang:hover{color:var(--snow)}
+/* hero */
+.hero{position:relative;padding:clamp(40px,6vw,72px) 0 clamp(24px,4vw,48px);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:120%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 70%,rgba(69,227,255,.12),transparent 60%)}
+.status{display:inline-flex;align-items:center;gap:10px;font:500 14px var(--data);color:var(--phos);margin-bottom:22px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--phos);box-shadow:0 0 10px var(--phos);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.status i{animation:none}}
+.hero h1{font-size:clamp(42px,6.2vw,80px);line-height:.98;letter-spacing:-.01em;max-width:12ch}
+.lede{font-size:clamp(19px,2vw,22px);line-height:1.55;color:var(--frost);max-width:34em;margin:26px 0 32px}
+.lede b{color:var(--snow);font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.btn{display:inline-block;font:600 17px/1 var(--display);letter-spacing:.03em;padding:17px 24px;text-decoration:none;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn.solid{background:var(--ion);color:var(--abyss)}
+.btn.solid:hover{background:var(--snow)}
+.btn.ghost{color:var(--snow);background:rgba(69,227,255,.08);box-shadow:inset 0 0 0 1px var(--wire)}
+.btn.ghost:hover{background:rgba(69,227,255,.16)}
+.price{margin-top:18px;font:400 14px var(--data);color:var(--mute)}
+.shot{margin:clamp(40px,6vw,72px) 0 0;position:relative}
+.shot .panel{padding:6px}
+.shot img{width:100%;height:auto;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.shot figcaption{font:400 13px var(--data);color:var(--mute);margin-top:12px}
+/* hero: promise on the left, one phone with one alarm on the right */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(32px,5vw,72px);align-items:center;min-height:calc(100vh - 64px - 96px)}
+@media (max-width:900px){.hero-grid{grid-template-columns:minmax(0,1fr);min-height:0}}
+.device{position:relative;display:grid;place-items:center;padding:24px 0 8px}
+.device::before{content:"";position:absolute;width:150%;aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;
+  background:repeating-radial-gradient(circle,rgba(69,227,255,.07) 0 1px,transparent 1px 64px),radial-gradient(circle,rgba(69,227,255,.16),transparent 58%);
+  -webkit-mask-image:radial-gradient(circle,#000 30%,transparent 68%);mask-image:radial-gradient(circle,#000 30%,transparent 68%)}
+.phone{position:relative;width:min(330px,82vw);min-height:min(600px,160vw);border-radius:46px;background:#050d15;
+  box-shadow:0 0 0 10px #0e1b25,0 0 0 11px #22394a,0 50px 100px -30px rgba(0,0,0,.9),0 0 90px -20px rgba(69,227,255,.35);
+  padding:18px 20px 22px;display:flex;flex-direction:column;overflow:hidden}
+.phone .sb{display:flex;justify-content:space-between;font:600 13px var(--body);color:var(--snow);padding:0 6px}
+.phone .sb i{width:84px;height:22px;border-radius:12px;background:#000;margin-top:-4px}
+.phone .app{display:flex;align-items:center;gap:8px;margin:22px 4px 18px;font:600 12px var(--display);letter-spacing:.32em;color:var(--frost)}
+.phone .app svg{width:18px;height:18px}
+.alert{background:linear-gradient(180deg,rgba(255,46,85,.16),rgba(255,46,85,.05));border:1px solid rgba(255,46,85,.45);border-radius:22px;padding:18px 18px 16px}
+.alert .h{display:flex;align-items:center;gap:8px;font:500 12px var(--data);color:#ff8fa5}
+.alert .h i{width:8px;height:8px;border-radius:50%;background:var(--flare);box-shadow:0 0 10px var(--flare);animation:pulse 1.6s ease-in-out infinite}
+.alert .t{font:600 22px/1.15 var(--display);color:#fff;margin:10px 0 8px}
+.alert .d{font-size:14px;line-height:1.45;color:var(--frost);margin:0}
+.alert .todo{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,46,85,.25);font-size:14px;color:var(--snow)}
+.alert .todo b{display:block;font:500 11px var(--data);color:#ff8fa5;margin-bottom:3px}
+.phone .act{margin-top:16px;display:grid;gap:8px}
+.phone .act span{display:block;text-align:center;border-radius:14px;padding:14px;font:600 15px var(--display)}
+.phone .act .p{background:var(--flare);color:#fff}
+.phone .act .s{color:var(--snow);background:rgba(255,255,255,.06)}
+.phone .ok{margin-top:auto;display:flex;align-items:center;gap:10px;border-radius:16px;background:rgba(107,255,176,.07);padding:12px 14px;font-size:13px;line-height:1.35;color:var(--frost)}
+.phone .ok i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--phos);box-shadow:0 0 8px var(--phos)}
+.phone .ok b{color:var(--phos);font-weight:600}
+.alert{animation:arrive .9s cubic-bezier(.2,.8,.2,1) .6s both}
+@keyframes arrive{from{opacity:0;transform:translateY(-24px) scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.alert{animation:none}.alert .h i{animation:none}}
+/* sections */
+section{padding:clamp(72px,10vw,128px) 0 0}
+.kicker{font:500 14px var(--data);color:var(--ion);margin:0 0 14px}
+h2{font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.005em;max-width:18ch;margin-bottom:18px}
+.intro{max-width:38em;font-size:19px;margin-bottom:40px}
+
+/* audience */
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.who{grid-template-columns:minmax(0,1fr)}}
+.who article{display:flex;flex-direction:column}
+.who .ph{aspect-ratio:4/3;overflow:hidden;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.who .ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(1.04)}
+.who h3{font-size:26px;margin:20px 0 8px}
+.who p{font-size:17px}
+.compare{margin-top:44px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--edge)}
+@media (max-width:760px){.compare{grid-template-columns:minmax(0,1fr)}}
+.compare div{padding:22px 24px 6px 0}
+.compare b{display:block;font:600 20px/1.2 var(--display);color:var(--snow);margin-bottom:6px}
+.compare .us b{color:var(--ion)}
+.compare p{font-size:16px;color:var(--mute)}
+.compare .us p{color:var(--frost)}
+
+/* steps: a real sequence */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;counter-reset:s}
+@media (max-width:900px){.steps{grid-template-columns:minmax(0,1fr)}}
+.steps li{padding:28px 28px 22px;counter-increment:s}
+.steps li::after{content:counter(s);position:absolute;right:22px;top:14px;font:700 54px/1 var(--display);color:rgba(69,227,255,.14)}
+.steps h3{font-size:24px;margin:0 0 10px;padding-right:48px}
+.steps p{font-size:17px;margin:0}
+.steps code{font:500 15px var(--data);color:var(--ion)}
+
+/* sources */
+.sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.sources{grid-template-columns:minmax(0,1fr)}}
+.src{padding:28px 28px 22px}
+.src .sl{font:500 13px var(--data);color:var(--ion);margin:0 0 10px}
+.src h3{font-size:23px;line-height:1.2;margin:0 0 10px}
+.src p{font-size:17px;margin:0}
+.src code{font:500 15px var(--data);color:var(--ion)}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-top:28px;font:500 15px var(--data);color:var(--frost)}
+.flow span{padding:10px 14px;box-shadow:inset 0 0 0 1px var(--wire)}
+.flow .hub{color:var(--abyss);background:var(--ion);box-shadow:none}
+.flow .you{color:var(--snow);box-shadow:inset 0 0 0 1px var(--snow)}
+.flow i{width:22px;height:1px;background:var(--wire);position:relative}
+.flow i::after{content:"";position:absolute;right:0;top:-3px;border:3.5px solid transparent;border-left:5px solid var(--wire);border-right:0}
+@media (max-width:600px){.flow{flex-direction:column;align-items:stretch}.flow i{width:1px;height:14px;margin-left:20px}.flow i::after{display:none}}
+
+/* feature rows with screenshots */
+.row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(28px,5vw,64px);align-items:center}
+.row.flip{grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr)}
+.row.flip .txt{order:2}
+@media (max-width:900px){.row,.row.flip{grid-template-columns:minmax(0,1fr)}.row.flip .txt{order:0}}
+.row .shot{margin:0}
+.ticks{list-style:none;margin:20px 0 0;padding:0}
+.ticks li{position:relative;padding:0 0 12px 28px;font-size:17px}
+.ticks li::before{content:"";position:absolute;left:0;top:10px;width:12px;height:2px;background:var(--ion)}
+.ticks b{color:var(--snow);font-weight:600}
+.tag{display:inline-block;font:600 12px/1 var(--data);padding:4px 6px;margin-right:8px;vertical-align:2px}
+.tag.now{color:var(--flare);box-shadow:inset 0 0 0 1px var(--flare)}
+.tag.soon{color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.tag.later{color:var(--mute);box-shadow:inset 0 0 0 1px var(--mute)}
+
+/* verdict card */
+.verdict{margin:0;padding:clamp(24px,3.5vw,40px);background:rgba(8,22,33,.85)}
+.verdict p{margin:0}
+.vh{display:flex;align-items:center;gap:12px;margin-bottom:22px!important}
+.badge{font:600 20px/1 var(--display);color:#fff;background:var(--flare);padding:9px 14px}
+.conf{font:500 13px var(--data);color:var(--mute)}
+.vt{font:500 13px var(--data);color:var(--ion);margin:0 0 8px!important}
+.vd{font-size:18px;line-height:1.55;color:var(--snow);margin-bottom:24px!important}
+.todo{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.todo li{display:flex;align-items:baseline;gap:4px;font-size:17px;color:var(--snow);padding:12px 14px;background:rgba(2,6,11,.55)}
+.todo .tag{flex:none;min-width:48px;text-align:center}
+
+/* case timeline */
+.tl{list-style:none;margin:20px 0 0;padding:0;border-left:1px solid var(--wire)}
+.tl li{position:relative;padding:0 0 14px 22px;font-size:16px}
+.tl li::before{content:"";position:absolute;left:-4px;top:9px;width:7px;height:7px;background:var(--wire)}
+.tl li.hot::before{background:var(--flare);box-shadow:0 0 8px var(--flare)}
+.tl li.ok::before{background:var(--phos);box-shadow:0 0 8px var(--phos)}
+.tl time{font:500 13px var(--data);color:var(--mute);margin-right:10px}
+
+#watch h2,#fits h2{margin-bottom:36px}
+/* watch grid */
+.watch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.watch{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.watch{grid-template-columns:minmax(0,1fr)}}
+.watch div{padding:24px 24px 18px}
+.watch h3{font-size:21px;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.watch h3 i{width:9px;height:9px;flex:none}
+.watch p{font-size:16px;margin:0}
+
+/* fits */
+.fits{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+@media (max-width:900px){.fits{grid-template-columns:minmax(0,1fr)}}
+.fits .panel{padding:clamp(22px,4vw,32px);min-width:0}
+.fits h3{font-size:26px;margin-bottom:12px}
+.pipe{font:500 15px/1.9 var(--data);color:var(--frost);margin:18px 0 0;padding:16px 18px;background:rgba(2,6,11,.6);border-left:2px solid var(--ion);overflow-x:auto;white-space:nowrap}
+.pipe span{color:var(--mute)}
+.pipe b{color:var(--ion);font-weight:500}
+.fits .it{margin-top:18px;padding:14px 16px;border-left:2px solid var(--ion);background:rgba(2,6,11,.6);font-size:15px;color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{font:500 13px var(--data);color:var(--frost);padding:6px 10px;box-shadow:inset 0 0 0 1px var(--wire)}
+
+/* contact */
+.contact{margin-top:clamp(72px,10vw,128px);padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--edge);
+  background:radial-gradient(ellipse at 20% 0%,rgba(69,227,255,.10),transparent 55%)}
+.contact .intro{margin-bottom:28px}
+footer{padding:28px 0 44px;border-top:1px solid rgba(22,56,74,.6);font-size:14px;color:var(--mute)}
+footer .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px}
+.by{display:inline-flex;align-items:center;gap:7px;color:var(--frost);text-decoration:none}
+.by svg{height:20px;width:auto}
+.by span{font:600 16px/1 var(--data);letter-spacing:-.02em;color:var(--snow)}
+footer .sp{flex:1}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#" aria-label="Northwatch home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="#45e3ff" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="#16384a" stroke-width="1.5"/><path d="M16 16 24.5 7.5" stroke="#45e3ff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#e6f2f8"/><circle cx="22" cy="12" r="1.6" fill="#ff2e55"/></svg>
+      <b>NORTHWATCH</b>
+    </a>
+    <nav>
+      <a href="#who">Who it's for</a>
+      <a href="#how">How it works</a>
+      <a href="#case">A real case</a>
+      <a href="#fits">Your firewall</a>
+      <a class="lang" href="../" hreflang="fi" lang="fi">FI</a>
+      <a class="cta" href="#contact">Get early access</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="status"><i></i>Watching your network, around the clock</p>
+      <h1>Your network, watched day and night.</h1>
+      <p class="lede">Northwatch keeps an eye on every device in your home or business and tells you <b>only when something real happens</b>, in plain words. No expertise needed. <b>It gives you the facts, you make the call.</b></p>
+      <div class="ctas">
+        <a class="btn solid" href="#contact">Get early access</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <p class="price">One affordable monthly price. No IT department needed.</p>
+    </div>
+    <div class="device" aria-label="Example of a Northwatch alarm on a phone">
+      <div class="phone">
+        <div class="sb"><span>21:04</span><i></i><span>5G</span></div>
+        <div class="app"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="#45e3ff" stroke-width="2.4"/><path d="M16 16 24.5 7.5" stroke="#45e3ff" stroke-width="2.4"/><circle cx="16" cy="16" r="2.6" fill="#e6f2f8"/></svg>NORTHWATCH</div>
+        <div class="alert">
+          <p class="h"><i></i>Alarm, just now</p>
+          <p class="t">Living-room projector may be infected</p>
+          <p class="d">It tried to contact a spyware server 1,350 times. Your firewall stopped almost all of them.</p>
+          <p class="todo"><b>What to do</b>Take it off your network.</p>
+        </div>
+        <div class="act"><span class="p">Isolate device</span><span class="s">Show me why</span></div>
+        <div class="ok"><i></i><span><b>Everything else is fine.</b> 1,994 attacks stopped today, nothing for you to do.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="who">
+  <div class="wrap">
+    <p class="kicker">Who it's for</p>
+    <h2>Built for networks that nobody watches.</h2>
+    <p class="intro">Large companies pay security experts to watch their network around the clock. Homes and small businesses face the same attacks, from the same places, without anyone watching. Northwatch closes that gap.</p>
+    <div class="who">
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1758687125679-d000e186e09b?w=1000&q=75&auto=format&fit=crop" alt="A father and son smiling on a sofa at home"></div>
+        <h3>Homes</h3>
+        <p>Smart TVs, kids' tablets, game consoles and cheap gadgets from online marketplaces. You find out when one of them starts talking to places it shouldn't.</p>
+      </article>
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1753351051161-21de8728ec17?w=1000&q=75&auto=format&fit=crop" alt="A café owner smiling and holding a sign that says we're open"></div>
+        <h3>Small businesses</h3>
+        <p>The shop, café, clinic or office without an IT department. Card terminals, cameras and guest Wi-Fi on one network, watched while you run the business.</p>
+      </article>
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1603201667230-bd139210db18?w=1000&q=75&auto=format&fit=crop" alt="A small team gathered around a laptop in an office"></div>
+        <h3>Growing companies</h3>
+        <p>Teams that take security seriously but can't justify a 24/7 security team or a full-time specialist. Northwatch does the watching; your IT person gets the evidence.</p>
+      </article>
+    </div>
+    <div class="compare">
+      <div><b>A security company watching for you</b><p>Built and priced for large organisations, with contracts to match.</p></div>
+      <div><b>A full-time security specialist</b><p>A full salary, and still only one person who sleeps at night.</p></div>
+      <div class="us"><b>Northwatch</b><p>A monthly subscription that watches around the clock and tells you, in plain words, when to act.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>It watches, it understands, it tells you.</h2>
+    <p class="intro">Northwatch runs on a small computer in your network, such as a mini PC or a home server. You use your own, and we tell you which models work well. From then on it keeps watch day and night, and you hear from it only when something needs you.</p>
+    <ol class="steps">
+      <li class="panel"><h3>It watches</h3><p>Everything that comes in and goes out of your network, and what your devices do inside it. Quietly, around the clock.</p></li>
+      <li class="panel"><h3>It understands</h3><p>Thousands of knocks on the door every day are normal, and they are stopped. A device in your home talking to criminals is not. Northwatch knows the difference.</p></li>
+      <li class="panel"><h3>It tells you</h3><p>What happened, on which device and what to do, in plain words. You decide. One click and the device is off your network.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="case">
+  <div class="wrap">
+    <div class="row">
+      <div class="txt">
+        <p class="kicker">A real case</p>
+        <h2>The projector that phoned home.</h2>
+        <p>A cheap Android projector joined a home Wi-Fi on a Sunday evening. Within seconds it started trying to contact a spyware server, twice a second, without pause. The firewall blocked almost all of them. Northwatch noticed the pattern and raised the alarm.</p>
+        <ol class="tl">
+          <li><time>21:04:10</time>The projector joins the Wi-Fi.</li>
+          <li><time>21:04:13</time>It starts calling a spyware server.</li>
+          <li><time>21:04:41</time>It tries to sneak past the firewall's protection.</li>
+          <li class="hot"><time>21:04:42</time>Northwatch opens Case #1 and raises the alarm.</li>
+          <li class="ok"><time>21:05:53</time>One click: the projector is off the network.</li>
+        </ol>
+      </div>
+      <figure class="shot"><div class="panel"><img loading="lazy" src="../img/nw-alarm.webp" width="1600" height="928" alt="Northwatch alarm: A device in your network may be infected. Living-room projector looked up a spyware domain. Buttons Acknowledge and Investigate."></div><figcaption>The alarm. It names the device, what it did and what the firewall did about it.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="row flip">
+      <figure class="verdict panel" aria-label="Example of a Northwatch explanation">
+        <p class="vh"><span class="badge">Infected</span><span class="conf">Fairly sure</span></p>
+        <p class="vt">What happened</p>
+        <p class="vd">The projector tried to contact a spyware server more than a thousand times within minutes of being switched on. Cheap projectors sometimes come with spying software already installed.</p>
+        <p class="vt">What to do</p>
+        <ol class="todo">
+          <li><span class="tag now">Now</span>Take the projector off your network.</li>
+          <li><span class="tag soon">Soon</span>Change the passwords of any accounts you used on it.</li>
+          <li><span class="tag later">Later</span>Replace it with one from a maker you know.</li>
+        </ol>
+      </figure>
+      <div class="txt">
+        <p class="kicker">Plain language</p>
+        <h2>An answer, not a wall of codes.</h2>
+        <p>Every alarm explains what happened, how sure Northwatch is and what to do now, soon and later. Written for people, not for experts.</p>
+        <p>The explanation is optional. Before anything is sent for it, you see exactly what would leave your network, and details about your home or office are hidden.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="row">
+      <div class="txt">
+        <p class="kicker">Your network at a glance</p>
+        <h2>Every device, in its place.</h2>
+        <p>Phones, computers, TVs and smart home gear, each in its own group. Northwatch learns what is normal for your network and points at what isn't.</p>
+        <ul class="ticks">
+          <li><b>New devices</b> the moment they join.</li>
+          <li><b>Devices that try to sneak around</b> your security settings.</li>
+          <li><b>Someone looking around inside your network</b>, the first sign of an intruder.</li>
+          <li><b>Devices talking to known criminal servers.</b></li>
+        </ul>
+      </div>
+      <figure class="shot"><div class="panel"><img loading="lazy" src="../img/nw-radar.webp" width="1400" height="1195" alt="Northwatch home network radar with the firewall in the centre and devices grouped into computers, phones and tablets, TV and media, smart home and network equipment"></div><figcaption>The home network radar.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="watch">
+  <div class="wrap">
+    <p class="kicker">What it keeps an eye on</p>
+    <h2>The things you would want to know.</h2>
+    <div class="watch">
+      <div class="panel"><h3><i style="background:var(--flare)"></i>Who's knocking</h3><p>Break-in attempts from the internet, stopped and shown on a map. You can look whenever you're curious.</p></div>
+      <div class="panel"><h3><i style="background:var(--amber)"></i>Devices acting strangely</h3><p>A TV, camera or gadget that suddenly talks to places it shouldn't.</p></div>
+      <div class="panel"><h3><i style="background:#c77dff"></i>New devices</h3><p>You know the moment something new joins your network, with a name you can recognise.</p></div>
+      <div class="panel"><h3><i style="background:var(--ion)"></i>Snoopers inside</h3><p>If someone on your network starts looking around where they shouldn't, you hear about it.</p></div>
+      <div class="panel"><h3><i style="background:var(--phos)"></i>Your internet connection</h3><p>When it goes down, and how reliable it really is over a day, a week and a month.</p></div>
+      <div class="panel"><h3><i style="background:var(--snow)"></i>Alarms that reach you</h3><p>On your screen, your phone and your smart home. If nobody reacts to a serious alarm, Northwatch calls you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="fits">
+  <div class="wrap">
+    <p class="kicker">Works with your firewall</p>
+    <h2>Works with the firewall you already have.</h2>
+    <div class="fits">
+      <div class="panel">
+        <h3>Not tied to any brand</h3>
+        <p>Most business firewalls, and many home ones, can share what they see. Northwatch understands them whatever the brand, and we keep adding more. Tell us which one you have and we'll make sure it works.</p>
+        <p class="it">For your IT person: Northwatch reads the firewall's standard syslog. No software on your computers, no changes to how your network works.</p>
+      </div>
+      <div class="panel">
+        <h3>Stays in your network</h3>
+        <ul class="ticks">
+          <li>Runs on your own small computer. We recommend models that work well.</li>
+          <li>Your data stays at home or in the office. Nothing is opened to the internet.</li>
+          <li>Keeps only what it needs to warn you, for about a week.</li>
+          <li>One affordable monthly price for the service.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <p class="kicker">Early access</p>
+    <h2>Want it watching your network?</h2>
+    <p class="intro">Northwatch is in early access for homes and small businesses in Finland. Tell us which firewall you have and we'll set up a demo on your own network.</p>
+    <div class="ctas">
+      <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20early%20access">Email hello@rootsec.fi</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="by" href="https://rootsec.fi">by
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M27 40H65M21 60H59M45 22 35 78M59 22 49 78" fill="none" stroke="#e6f2f8" stroke-width="9" stroke-linecap="square"/><rect x="68" y="70" width="22" height="9" fill="#f2a83b"/></svg>
+      <span>rootsec</span></a>
+    <span class="sp"></span>
+    <span>Photos: Unsplash. Screenshots from a demo network.</span>
+  </div>
+</footer>
+</body>
+</html>
