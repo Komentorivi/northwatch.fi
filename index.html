@@ -4,374 +4,365 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Northwatch</title>
-<meta name="description" content="Northwatch turns your firewall's logs into a live map, opens a case when a device on your network misbehaves, and cuts it off with one click. Runs on your own hardware.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302060b'/%3E%3Cpath d='M16 4 26 26H6Z' fill='none' stroke='%2345e3ff' stroke-width='3'/%3E%3C/svg%3E">
+<meta name="description" content="Northwatch is a security operations centre for homes and small businesses: it watches your network around the clock, raises the alarm only when something real happens and explains it in plain language. Monthly subscription.">
+<meta property="og:title" content="Northwatch: a security operations centre for the rest of us">
+<meta property="og:description" content="Real alarms, plain language, one click to act. For homes and small businesses.">
+<meta property="og:image" content="img/nw-map.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302060b'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Cpath d='M16 16 23 9' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23d6ecf5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Polar day outside, polar night inside the product window.
-   Page: frost paper + ink. Product colours (ion, flare, phos, sodium) live only inside the window. */
+/* Northwatch: the product's own situation-room look. Abyss + ion cyan; alarm colours only where an alarm is shown. */
 :root{
-  --frost:#e8f0f2; --paper:#f4f8f9; --ink:#0d2633; --steel:#506b78; --rime:#c3d3d9;
-  --deep:#0a6f89;
-  --abyss:#02060b; --edge:#16384a; --land:#12303f; --ion:#45e3ff; --flare:#ff2e55;
-  --sodium:#ff9f43; --amber:#ffd23f; --phos:#6bffb0; --snow:#d6ecf5; --mute:#6f8fa1;
-  --display:'Big Shoulders Display',Impact,sans-serif;
-  --body:'Atkinson Hyperlegible',system-ui,sans-serif;
+  --abyss:#02060b; --deep:#06111a; --glass:rgba(8,22,33,.72); --edge:#16384a; --wire:#1d4458;
+  --ion:#45e3ff; --phos:#6bffb0; --flare:#ff2e55; --amber:#ffb238;
+  --snow:#e6f2f8; --frost:#b9cdd8; --mute:#7a94a3;
+  --cut:14px;
+  --display:'Chakra Petch',system-ui,sans-serif;
+  --body:'Instrument Sans',system-ui,sans-serif;
   --data:'IBM Plex Mono',ui-monospace,Consolas,monospace;
-  --gut:clamp(16px,4vw,48px);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;background:var(--frost);color:var(--ink);font:400 18px/1.6 var(--body);-webkit-font-smoothing:antialiased}
-a{color:var(--deep);text-underline-offset:3px}
-a:focus-visible,button:focus-visible{outline:3px solid var(--deep);outline-offset:3px}
-.wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut)}
+body{margin:0;background:var(--abyss);color:var(--frost);font:400 18px/1.65 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--ion);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--ion);outline-offset:3px}
+.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+h1,h2,h3{font-family:var(--display);color:var(--snow);margin:0;font-weight:600}
+p{margin:0 0 14px}
+
+/* chamfered glass panel, same language as the product */
+.panel{position:relative;background:var(--glass);
+  clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid var(--edge);clip-path:inherit;
+  background:linear-gradient(135deg,rgba(69,227,255,.28) 0,transparent 24px) top left/44px 44px no-repeat,
+             linear-gradient(-45deg,rgba(69,227,255,.28) 0,transparent 24px) bottom right/44px 44px no-repeat}
 
 /* top bar */
-.top{display:flex;align-items:center;gap:16px;padding:22px 0}
-.mark{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
-.mark svg{width:26px;height:26px}
-.mark b{font:800 26px/1 var(--display);letter-spacing:.06em}
-.top nav{margin-left:auto;display:flex;gap:22px;font-size:16px}
-.top nav a{color:var(--ink);text-decoration:none}
-.top nav a:hover{text-decoration:underline}
-@media (max-width:640px){.top nav a:not(.go){display:none}}
+.top{position:sticky;top:0;z-index:5;background:rgba(2,6,11,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(22,56,74,.6)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.mark{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark svg{width:28px;height:28px}
+.mark b{font:600 20px/1 var(--display);letter-spacing:.36em;color:var(--snow);text-shadow:0 0 16px rgba(69,227,255,.45)}
+.top nav{margin-left:auto;display:flex;gap:26px;font-size:15px}
+.top nav a{color:var(--frost);text-decoration:none}
+.top nav a:hover{color:var(--snow)}
+.top .cta{font:600 15px/1 var(--display);letter-spacing:.04em;color:var(--abyss);background:var(--ion);padding:11px 16px;text-decoration:none;
+  clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+.top .cta{white-space:nowrap}
+@media (max-width:860px){.top nav a:not(.cta){display:none}}
+@media (max-width:480px){.mark b{letter-spacing:.22em;font-size:17px}.top .cta{font-size:14px;padding:10px 12px}
+  .hero .shot img{aspect-ratio:4/3;object-fit:cover;object-position:50% 45%}}
 
 /* hero */
-.hero{padding:clamp(24px,6vw,64px) 0 28px}
-h1{font:800 clamp(52px,9.5vw,128px)/.88 var(--display);letter-spacing:-.01em;margin:0;max-width:11ch;text-transform:none}
-.lede{font-size:clamp(19px,2vw,22px);max-width:36em;margin:26px 0 30px;color:var(--ink)}
+.hero{position:relative;padding:clamp(48px,8vw,96px) 0 0;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:120%;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 70%,rgba(69,227,255,.12),transparent 60%)}
+.status{display:inline-flex;align-items:center;gap:10px;font:500 14px var(--data);color:var(--phos);margin-bottom:22px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--phos);box-shadow:0 0 10px var(--phos);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.status i{animation:none}}
+.hero h1{font-size:clamp(42px,7vw,88px);line-height:.98;letter-spacing:-.01em;max-width:13ch}
+.lede{font-size:clamp(19px,2vw,22px);line-height:1.55;color:var(--frost);max-width:34em;margin:26px 0 32px}
+.lede b{color:var(--snow);font-weight:600}
 .ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.btn{display:inline-block;font:700 17px/1 var(--body);padding:16px 22px;text-decoration:none;border:2px solid var(--ink)}
-.btn.solid{background:var(--ink);color:var(--paper)}
-.btn.solid:hover{background:var(--deep);border-color:var(--deep)}
-.btn.line{color:var(--ink)}
-.btn.line:hover{background:var(--paper)}
-
-/* product window */
-.window{margin:44px 0 0;background:var(--abyss);color:var(--snow);border-radius:6px;overflow:hidden;
-  box-shadow:0 30px 60px -30px rgba(13,38,51,.55)}
-.wbar{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--edge);font:13px var(--data);color:var(--mute)}
-.wbar .name{font:600 15px var(--display);letter-spacing:.38em;color:var(--snow)}
-.wbar .demo{color:var(--amber);border:1px solid rgba(255,210,63,.45);padding:1px 7px}
-.wbar .clock{margin-left:auto;color:var(--snow);font-variant-numeric:tabular-nums}
-.wbody{display:grid;grid-template-columns:minmax(0,1fr) 300px}
-@media (max-width:860px){.wbody{grid-template-columns:1fr}}
-.map{position:relative;aspect-ratio:16/9;min-height:240px}
-.map canvas{position:absolute;inset:0;width:100%;height:100%}
-.legend{position:absolute;left:14px;bottom:12px;display:flex;flex-wrap:wrap;gap:6px 14px;font:12px var(--data);color:var(--mute)}
-.legend i{display:inline-block;width:14px;height:2px;margin-right:6px;vertical-align:middle}
-.feed{border-left:1px solid var(--edge);padding:14px 16px;font:12.5px/1.45 var(--data);min-height:240px}
-@media (max-width:860px){.feed{border-left:0;border-top:1px solid var(--edge);min-height:0}}
-.feed h2{font:500 13px var(--display);letter-spacing:.08em;color:var(--mute);margin:0 0 10px}
-.feed ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-.feed li{display:grid;grid-template-columns:62px 1fr;gap:8px;border-left:2px solid var(--c,var(--edge));padding-left:8px}
-.feed li time{color:var(--mute)}
-.feed li span{color:var(--snow);min-width:0;overflow-wrap:anywhere}
-@media (max-width:600px){
-  .map{aspect-ratio:auto;height:auto;display:flex;flex-direction:column}
-  .map canvas{position:relative;inset:auto;aspect-ratio:4/3;height:auto}
-  .legend{position:static;padding:8px 14px 12px}
-}
-.feed li small{display:block;color:var(--mute);font-size:11.5px}
-@media (max-width:860px){.feed li:nth-child(n+5){display:none}}
-.caption{font-size:15px;color:var(--steel);margin:12px 2px 0}
+.btn{display:inline-block;font:600 17px/1 var(--display);letter-spacing:.03em;padding:17px 24px;text-decoration:none;
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn.solid{background:var(--ion);color:var(--abyss)}
+.btn.solid:hover{background:var(--snow)}
+.btn.ghost{color:var(--snow);background:rgba(69,227,255,.08);box-shadow:inset 0 0 0 1px var(--wire)}
+.btn.ghost:hover{background:rgba(69,227,255,.16)}
+.price{margin-top:18px;font:400 14px var(--data);color:var(--mute)}
+.shot{margin:clamp(40px,6vw,72px) 0 0;position:relative}
+.shot .panel{padding:6px}
+.shot img{width:100%;height:auto;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.shot figcaption{font:400 13px var(--data);color:var(--mute);margin-top:12px}
+.hero .shot{box-shadow:0 60px 120px -40px rgba(69,227,255,.25)}
 
 /* sections */
-section{padding:clamp(56px,9vw,104px) 0 0}
-h2.big{font:800 clamp(38px,5.6vw,68px)/.95 var(--display);margin:0 0 18px;max-width:16ch}
-.intro{max-width:36em;margin:0 0 36px;color:var(--ink)}
+section{padding:clamp(72px,10vw,128px) 0 0}
+.kicker{font:500 14px var(--data);color:var(--ion);margin:0 0 14px}
+h2{font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.005em;max-width:18ch;margin-bottom:18px}
+.intro{max-width:38em;font-size:19px;margin-bottom:40px}
 
-/* case timeline: a real sequence, so times mark the steps */
-.case{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:clamp(24px,5vw,64px);align-items:start}
-@media (max-width:860px){.case{grid-template-columns:1fr}}
-.case .intro{margin-bottom:0}
-.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--rime)}
-.tl li{position:relative;padding:0 0 22px 26px}
-.tl li::before{content:"";position:absolute;left:-7px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--frost);border:2px solid var(--steel)}
-.tl li.alarm::before{border-color:#d0213f;background:#d0213f}
-.tl li.done::before{border-color:var(--deep);background:var(--deep)}
-.tl time{display:block;font:500 14px var(--data);color:var(--steel)}
-.tl p{margin:2px 0 0}
-.tl li:last-child{padding-bottom:0}
+/* audience */
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.who{grid-template-columns:minmax(0,1fr)}}
+.who article{display:flex;flex-direction:column}
+.who .ph{aspect-ratio:4/3;overflow:hidden;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.who .ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(1.04)}
+.who h3{font-size:26px;margin:20px 0 8px}
+.who p{font-size:17px}
+.compare{margin-top:44px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1px solid var(--edge)}
+@media (max-width:760px){.compare{grid-template-columns:minmax(0,1fr)}}
+.compare div{padding:22px 24px 6px 0}
+.compare b{display:block;font:600 20px/1.2 var(--display);color:var(--snow);margin-bottom:6px}
+.compare .us b{color:var(--ion)}
+.compare p{font-size:16px;color:var(--mute)}
+.compare .us p{color:var(--frost)}
 
-/* what it watches */
-.watch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:2px solid var(--ink)}
+/* steps: a real sequence */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;counter-reset:s}
+@media (max-width:900px){.steps{grid-template-columns:minmax(0,1fr)}}
+.steps li{padding:28px 28px 22px;counter-increment:s}
+.steps li::after{content:counter(s);position:absolute;right:22px;top:14px;font:700 54px/1 var(--display);color:rgba(69,227,255,.14)}
+.steps h3{font-size:24px;margin:0 0 10px;padding-right:48px}
+.steps p{font-size:17px;margin:0}
+.steps code{font:500 15px var(--data);color:var(--ion)}
+
+/* feature rows with screenshots */
+.row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(28px,5vw,64px);align-items:center}
+.row.flip{grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr)}
+.row.flip .txt{order:2}
+@media (max-width:900px){.row,.row.flip{grid-template-columns:minmax(0,1fr)}.row.flip .txt{order:0}}
+.row .shot{margin:0}
+.ticks{list-style:none;margin:20px 0 0;padding:0}
+.ticks li{position:relative;padding:0 0 12px 28px;font-size:17px}
+.ticks li::before{content:"";position:absolute;left:0;top:10px;width:12px;height:2px;background:var(--ion)}
+.ticks b{color:var(--snow);font-weight:600}
+.tag{display:inline-block;font:600 12px/1 var(--data);padding:4px 6px;margin-right:8px;vertical-align:2px}
+.tag.now{color:var(--flare);box-shadow:inset 0 0 0 1px var(--flare)}
+.tag.soon{color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+.tag.later{color:var(--mute);box-shadow:inset 0 0 0 1px var(--mute)}
+
+/* case timeline */
+.tl{list-style:none;margin:20px 0 0;padding:0;border-left:1px solid var(--wire)}
+.tl li{position:relative;padding:0 0 14px 22px;font-size:16px}
+.tl li::before{content:"";position:absolute;left:-4px;top:9px;width:7px;height:7px;background:var(--wire)}
+.tl li.hot::before{background:var(--flare);box-shadow:0 0 8px var(--flare)}
+.tl li.ok::before{background:var(--phos);box-shadow:0 0 8px var(--phos)}
+.tl time{font:500 13px var(--data);color:var(--mute);margin-right:10px}
+
+#watch h2,#fits h2{margin-bottom:36px}
+/* watch grid */
+.watch{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 @media (max-width:900px){.watch{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.watch{grid-template-columns:1fr}}
-.watch div{padding:22px 24px 26px 0;border-bottom:1px solid var(--rime)}
-.watch h3{font:800 28px/1 var(--display);margin:0 0 8px}
-.watch p{margin:0;font-size:17px;color:var(--ink)}
+@media (max-width:560px){.watch{grid-template-columns:minmax(0,1fr)}}
+.watch div{padding:24px 24px 18px}
+.watch h3{font-size:21px;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.watch h3 i{width:9px;height:9px;flex:none}
+.watch p{font-size:16px;margin:0}
 
 /* fits */
-#fits h2.big{margin-bottom:36px}
-.fits{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px)}
-@media (max-width:860px){.fits{grid-template-columns:1fr}}
-.fits h3{font:800 30px/1 var(--display);margin:0 0 14px}
-.fits ul{margin:0;padding:0 0 0 1.1em}
-.fits li{margin:0 0 8px}
-.fits li::marker{color:var(--deep)}
+.fits{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+@media (max-width:900px){.fits{grid-template-columns:minmax(0,1fr)}}
+.fits .panel{padding:clamp(22px,4vw,32px);min-width:0}
+.fits h3{font-size:26px;margin-bottom:12px}
+.pipe{font:500 15px/1.9 var(--data);color:var(--frost);margin:18px 0 0;padding:16px 18px;background:rgba(2,6,11,.6);border-left:2px solid var(--ion);overflow-x:auto;white-space:nowrap}
+.pipe span{color:var(--mute)}
+.pipe b{color:var(--ion);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{font:500 13px var(--data);color:var(--frost);padding:6px 10px;box-shadow:inset 0 0 0 1px var(--wire)}
 
 /* contact */
-.contact{margin-top:clamp(56px,9vw,104px);background:var(--ink);color:var(--paper);padding:clamp(40px,7vw,80px) 0}
-.contact h2.big{color:var(--paper)}
-.contact p{max-width:34em;margin:0 0 28px}
-.contact .btn{border-color:var(--paper)}
-.contact .btn.solid{background:var(--paper);color:var(--ink)}
-.contact .btn.solid:hover{background:var(--ion);border-color:var(--ion)}
-.contact a:focus-visible{outline-color:var(--ion)}
-footer{padding:26px 0 40px;font-size:15px;color:var(--steel)}
-footer .wrap{display:flex;flex-wrap:wrap;gap:8px 24px}
+.contact{margin-top:clamp(72px,10vw,128px);padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--edge);
+  background:radial-gradient(ellipse at 20% 0%,rgba(69,227,255,.10),transparent 55%)}
+.contact .intro{margin-bottom:28px}
+footer{padding:28px 0 44px;border-top:1px solid rgba(22,56,74,.6);font-size:14px;color:var(--mute)}
+footer .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px}
+.by{display:inline-flex;align-items:center;gap:7px;color:var(--frost);text-decoration:none}
+.by svg{height:20px;width:auto}
+.by span{font:600 16px/1 var(--data);letter-spacing:-.02em;color:var(--snow)}
+footer .sp{flex:1}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
+<header class="top">
+  <div class="wrap">
     <a class="mark" href="#" aria-label="Northwatch home">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 28 28H4Z" fill="none" stroke="#0d2633" stroke-width="3.2"/><circle cx="16" cy="20" r="2.6" fill="#0a6f89"/></svg>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="#45e3ff" stroke-width="2"/><circle cx="16" cy="16" r="6" fill="none" stroke="#16384a" stroke-width="1.5"/><path d="M16 16 24.5 7.5" stroke="#45e3ff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#e6f2f8"/><circle cx="22" cy="12" r="1.6" fill="#ff2e55"/></svg>
       <b>NORTHWATCH</b>
     </a>
     <nav>
-      <a href="#case">The projector case</a>
-      <a href="#watch">What it watches</a>
-      <a href="#fits">Requirements</a>
-      <a class="go" href="#contact">Contact</a>
+      <a href="#who">Who it's for</a>
+      <a href="#how">How it works</a>
+      <a href="#case">A real case</a>
+      <a href="#fits">Your firewall</a>
+      <a class="cta" href="#contact">Get early access</a>
     </nav>
-  </header>
-
-  <main>
-  <div class="hero">
-    <h1>See who knocks on your network.</h1>
-    <p class="lede">Northwatch reads your firewall's logs and shows every connection on a live map. When a device on your network starts behaving badly, it opens a case, explains what happened and lets you cut the device off with one click. It runs on your own hardware.</p>
-    <div class="ctas">
-      <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20demo">Ask for a demo</a>
-      <a class="btn line" href="#case">Read the projector case</a>
-    </div>
-
-    <figure class="window" aria-label="Animated example of the Northwatch live map">
-      <div class="wbar"><span class="name">NORTHWATCH</span><span class="demo">Demo data</span><span class="clock" id="clock">--:--:--</span></div>
-      <div class="wbody">
-        <div class="map">
-          <canvas id="map" role="img" aria-label="World map with connections arriving at a home network in Helsinki"></canvas>
-          <div class="legend" aria-hidden="true">
-            <span><i style="background:var(--ion)"></i>Traffic</span>
-            <span><i style="background:var(--phos)"></i>Blocked attempt</span>
-            <span><i style="background:var(--amber)"></i>Medium</span>
-            <span><i style="background:var(--sodium)"></i>High</span>
-            <span><i style="background:var(--flare)"></i>Critical</span>
-          </div>
-        </div>
-        <div class="feed">
-          <h2>Attacks stopped</h2>
-          <ol id="feed" aria-live="off"></ol>
-        </div>
-      </div>
-    </figure>
-    <p class="caption">The live map with made-up events. Addresses are from documentation ranges.</p>
   </div>
+</header>
 
-  <section id="case" class="case">
-    <div>
-      <h2 class="big">Case #1: the projector that phoned home</h2>
-      <p class="intro">This was the first real case Northwatch caught, on a Sunday evening in a home network with 14 devices. From the first lookup to a contained device took under two minutes, and most of that was a person reading.</p>
+<main>
+<div class="hero">
+  <div class="wrap">
+    <p class="status"><i></i>Watching your network, around the clock</p>
+    <h1>A security operations centre for the rest of us.</h1>
+    <p class="lede">Northwatch watches your network day and night, raises the alarm <b>only when something real happens</b> and explains it in plain language. You don't need to be a security expert. <b>It gives you the facts, you make the call.</b></p>
+    <div class="ctas">
+      <a class="btn solid" href="#contact">Get early access</a>
+      <a class="btn ghost" href="#how">See how it works</a>
     </div>
-    <ol class="tl">
-      <li><time>21:04:10</time><p>A cheap Android projector is switched on and joins the home Wi-Fi.</p></li>
-      <li><time>21:04:13</time><p>It starts asking for a spyware server's address, twice a second, without pause.</p></li>
-      <li><time>21:04:20</time><p>The firewall blocks almost every lookup. Three get through.</p></li>
-      <li><time>21:04:41</time><p>The projector tries to go around the firewall and asks Google's DNS at 8.8.8.8 directly. One answer comes back.</p></li>
-      <li class="alarm"><time>21:04:42</time><p>Northwatch recognises the pattern from the firewall's log and opens Case #1.</p></li>
-      <li><time>21:05:30</time><p>On request, an AI reads the evidence, explains it in plain language and suggests the next step. Home addresses are replaced with aliases before anything is sent.</p></li>
-      <li><time>21:05:52</time><p>One click on Isolate device. Northwatch tells the Wi-Fi controller to block the projector.</p></li>
-      <li class="done"><time>21:05:53</time><p>The access point drops the projector and keeps it out. The lookups stop. The case is marked Contained.</p></li>
-    </ol>
-  </section>
-
-  <section id="watch">
-    <h2 class="big">What it watches</h2>
-    <p class="intro">Your firewall already logs all of this. Northwatch puts it in one place and tells you when something needs you.</p>
-    <div class="watch">
-      <div><h3>Traffic</h3><p>Every connection in and out, drawn on a world map as it happens, with history from one hour to seven days.</p></div>
-      <div><h3>Attacks</h3><p>Intrusion prevention hits sorted by severity and mapped to MITRE ATT&amp;CK, checked against public blocklists, GreyNoise and Shodan.</p></div>
-      <div><h3>Devices</h3><p>New devices, scanning inside your network, devices that skip your DNS and devices that talk to known botnet servers.</p></div>
-      <div><h3>DNS</h3><p>Lookup storms, random-looking domain names and DNS tunnelling, per device, read from Pi-hole.</p></div>
-      <div><h3>Internet link</h3><p>Outages and availability over 24 hours, 7 days and 30 days, with bandwidth use and a warning when the line is full.</p></div>
-      <div><h3>Alarms</h3><p>Desktop notifications and Home Assistant. If nobody reacts to a serious alarm, Northwatch calls your phone.</p></div>
-    </div>
-  </section>
-
-  <section id="fits">
-    <h2 class="big">Fits the network you already have</h2>
-    <div class="fits">
-      <div>
-        <h3>Works with</h3>
-        <ul>
-          <li>Palo Alto Networks firewalls (PAN-OS)</li>
-          <li>Fortinet FortiGate</li>
-          <li>Ubiquiti UniFi for device names and isolation</li>
-          <li>Pi-hole for DNS analytics</li>
-          <li>Home Assistant for alarms</li>
-        </ul>
-        <p>Support for more firewalls is added one module at a time. Ask if yours is missing.</p>
-      </div>
-      <div>
-        <h3>Stays with you</h3>
-        <ul>
-          <li>Runs in one Docker container on a small server, NUC or NAS.</li>
-          <li>Raw logs are never written to disk. Only counters and cases are kept, for eight days.</li>
-          <li>No inbound ports need to be opened.</li>
-          <li>AI analysis is optional and per case, and you see exactly what would be sent before it leaves.</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-  </main>
+    <p class="price">Affordable monthly subscription. Runs on a small box in your own network.</p>
+    <figure class="shot">
+      <div class="panel"><img src="img/nw-map.webp" width="2400" height="1440" alt="Northwatch situation room: a world map with connections arriving at a home network, attack stages on the left, busiest devices and applications on the right, and a list of stopped attacks at the bottom" fetchpriority="high"></div>
+      <figcaption>The Northwatch situation room, recorded from a demo home network.</figcaption>
+    </figure>
+  </div>
 </div>
+
+<section id="who">
+  <div class="wrap">
+    <p class="kicker">Who it's for</p>
+    <h2>Built for networks that nobody watches.</h2>
+    <p class="intro">Large companies pay for a security operations centre that watches their network around the clock. Homes and small businesses face the same attacks, from the same places, without anyone watching. Northwatch closes that gap.</p>
+    <div class="who">
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1758687125679-d000e186e09b?w=1000&q=75&auto=format&fit=crop" alt="A father and son smiling on a sofa at home"></div>
+        <h3>Homes</h3>
+        <p>Smart TVs, kids' tablets, game consoles and cheap gadgets from online marketplaces. You find out when one of them starts talking to places it shouldn't.</p>
+      </article>
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1753351051161-21de8728ec17?w=1000&q=75&auto=format&fit=crop" alt="A café owner smiling and holding a sign that says we're open"></div>
+        <h3>Small businesses</h3>
+        <p>The shop, café, clinic or office without an IT department. Card terminals, cameras and guest Wi-Fi on one network, watched while you run the business.</p>
+      </article>
+      <article>
+        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1603201667230-bd139210db18?w=1000&q=75&auto=format&fit=crop" alt="A small team gathered around a laptop in an office"></div>
+        <h3>Growing companies</h3>
+        <p>Teams that take security seriously but can't justify a 24/7 security team or a full-time specialist. Northwatch does the watching; your IT person gets the evidence.</p>
+      </article>
+    </div>
+    <div class="compare">
+      <div><b>A managed SOC service</b><p>Built and priced for large organisations, with contracts to match.</p></div>
+      <div><b>A full-time security specialist</b><p>A full salary, and still only one person who sleeps at night.</p></div>
+      <div class="us"><b>Northwatch</b><p>A monthly subscription that watches around the clock and tells you, in plain words, when to act.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>From firewall log to a clear decision.</h2>
+    <p class="intro">Your firewall already sees every connection and every blocked attack. It just has no one to tell. Northwatch reads what it sees and turns it into something you can act on.</p>
+    <ol class="steps">
+      <li class="panel"><h3>Your firewall sends its log</h3><p>Point your firewall's <code>syslog</code> at the Northwatch box. No agents on your computers, no ports opened to the internet.</p></li>
+      <li class="panel"><h3>Northwatch separates noise from danger</h3><p>Thousands of blocked scans a day are normal. A device inside your network looking up spyware servers is not. Northwatch knows the difference.</p></li>
+      <li class="panel"><h3>You get a clear alarm and decide</h3><p>What happened, on which device, how sure it is and what to do now, soon and later. One click isolates the device if you decide it should go.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="case">
+  <div class="wrap">
+    <div class="row">
+      <div class="txt">
+        <p class="kicker">A real case</p>
+        <h2>The projector that phoned home.</h2>
+        <p>A cheap Android projector joined a home Wi-Fi on a Sunday evening. Within seconds it started looking up spyware servers, twice a second, without pause. The firewall blocked almost all of them. Northwatch noticed the pattern and raised the alarm.</p>
+        <ol class="tl">
+          <li><time>21:04:10</time>The projector joins the Wi-Fi.</li>
+          <li><time>21:04:13</time>It starts asking for a spyware server.</li>
+          <li><time>21:04:41</time>It tries to get around the firewall's DNS filter.</li>
+          <li class="hot"><time>21:04:42</time>Northwatch opens Case #1 and raises the alarm.</li>
+          <li class="ok"><time>21:05:53</time>One click: the projector is off the network.</li>
+        </ol>
+      </div>
+      <figure class="shot"><div class="panel"><img loading="lazy" src="img/nw-alarm.webp" width="1600" height="928" alt="Northwatch alarm: A device in your network may be infected. Living-room projector looked up a spyware domain. Buttons Acknowledge and Investigate."></div><figcaption>The alarm. It names the device, what it did and what the firewall did about it.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="row flip">
+      <figure class="shot"><div class="panel"><img loading="lazy" src="img/nw-case.webp" width="2000" height="1372" alt="Northwatch case view: verdict Compromised with medium confidence, a plain-language explanation, a to-do list marked Now, Soon and Later, device details and a timeline"></div><figcaption>The case room with the optional AI analysis.</figcaption></figure>
+      <div class="txt">
+        <p class="kicker">Plain language</p>
+        <h2>An answer, not a wall of codes.</h2>
+        <p>Every case collects its own evidence: the device, what it did, when and how often. On request, an AI reads the evidence and writes what most likely happened and how sure it can be.</p>
+        <ul class="ticks">
+          <li><span class="tag now">Now</span>Isolate the projector from the rest of the network.</li>
+          <li><span class="tag soon">Soon</span>Change the passwords of accounts used on it.</li>
+          <li><span class="tag later">Later</span>Replace it with a device from a known maker.</li>
+        </ul>
+        <p style="margin-top:8px">Before anything is sent, you see exactly what leaves your network. Addresses inside your home or office are replaced with aliases.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="row">
+      <div class="txt">
+        <p class="kicker">Your network at a glance</p>
+        <h2>Every device, in its place.</h2>
+        <p>Phones, computers, TVs, smart home gear and network equipment, grouped on one radar. Northwatch learns what is normal and points at what isn't.</p>
+        <ul class="ticks">
+          <li><b>New devices</b> the moment they join.</li>
+          <li><b>Devices that skip your DNS filter</b> and talk to the internet directly.</li>
+          <li><b>Scanning inside your network</b>, the first sign of an intruder moving around.</li>
+          <li><b>Contact with known botnet and malware servers</b>, checked against public threat lists.</li>
+        </ul>
+      </div>
+      <figure class="shot"><div class="panel"><img loading="lazy" src="img/nw-radar.webp" width="1400" height="1195" alt="Northwatch home network radar with the firewall in the centre and devices grouped into computers, phones and tablets, TV and media, smart home and network equipment"></div><figcaption>The home network radar.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="watch">
+  <div class="wrap">
+    <p class="kicker">What it watches</p>
+    <h2>Everything your firewall sees, finally read.</h2>
+    <div class="watch">
+      <div class="panel"><h3><i style="background:var(--ion)"></i>Traffic</h3><p>Every connection in and out on a live world map, with history from one hour to seven days.</p></div>
+      <div class="panel"><h3><i style="background:var(--flare)"></i>Attacks</h3><p>Blocked intrusion attempts sorted by severity and attack stage, checked against public threat intelligence.</p></div>
+      <div class="panel"><h3><i style="background:#c77dff"></i>Devices</h3><p>New, unusual and suspicious devices inside your network, with names you recognise.</p></div>
+      <div class="panel"><h3><i style="background:var(--amber)"></i>DNS</h3><p>Lookup storms, random-looking domain names and DNS tunnelling, per device.</p></div>
+      <div class="panel"><h3><i style="background:var(--phos)"></i>Internet link</h3><p>Outages and availability over 24 hours, 7 days and 30 days, and a warning when the line is full.</p></div>
+      <div class="panel"><h3><i style="background:var(--snow)"></i>Alarms</h3><p>On screen, on your phone and in your smart home. If nobody reacts to a serious alarm, Northwatch calls you.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="fits">
+  <div class="wrap">
+    <p class="kicker">Works with your firewall</p>
+    <h2>If it can send syslog, we want to read it.</h2>
+    <div class="fits">
+      <div class="panel">
+        <h3>Vendor-agnostic by design</h3>
+        <p>Northwatch is not tied to any brand. Each firewall's log format is read by its own small module, and everything after that is shared. Our goal is to support as many firewalls as possible: if yours can send its logs over syslog, Northwatch can most likely read it. Tell us your model and we'll add it.</p>
+        <div class="pipe">firewall <span>&rarr;</span> syslog <span>&rarr;</span> <b>northwatch</b> <span>&rarr;</span> map, cases, alarms</div>
+      </div>
+      <div class="panel">
+        <h3>What it can use</h3>
+        <p>The more it can read, the more it can tell you. All of these are optional except the firewall log.</p>
+        <div class="chips">
+          <span>Traffic logs</span><span>Threat and intrusion logs</span><span>Admin logins</span><span>DNS filter logs</span><span>Wi-Fi controller</span><span>Device isolation</span><span>Interface counters</span><span>Smart home</span><span>Phone call alarms</span>
+        </div>
+        <p style="margin-top:20px">Runs in one container on a small box in your network. Raw logs are never written to disk, only counters and cases, kept for eight days. Nothing is opened to the internet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
 
 <section id="contact" class="contact">
   <div class="wrap">
-    <h2 class="big">Want to see it on your own network?</h2>
-    <p>Northwatch is in early access in Finland. Tell us which firewall you have and we'll set up a demo.</p>
+    <p class="kicker">Early access</p>
+    <h2>Want it watching your network?</h2>
+    <p class="intro">Northwatch is in early access for homes and small businesses in Finland. Tell us which firewall you have and we'll set up a demo on your own network.</p>
     <div class="ctas">
-      <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20demo">Email hello@rootsec.fi</a>
+      <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20early%20access">Email hello@rootsec.fi</a>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span>Northwatch is made by <a href="https://rootsec.fi">Rootsec</a>, Helsinki.</span>
-    <span>Map data: Natural Earth.</span>
+    <a class="by" href="https://rootsec.fi">by
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M27 40H65M21 60H59M45 22 35 78M59 22 49 78" fill="none" stroke="#e6f2f8" stroke-width="9" stroke-linecap="square"/><rect x="68" y="70" width="22" height="9" fill="#f2a83b"/></svg>
+      <span>rootsec</span></a>
+    <span class="sp"></span>
+    <span>Photos: Unsplash. Screenshots from a demo network.</span>
   </div>
 </footer>
-
-<script src="assets/d3.min.js"></script>
-<script src="assets/topojson-client.min.js"></script>
-<script src="assets/land.js"></script>
-<script>
-(() => {
-  const HOME = [24.94, 60.17];
-  const C = {ion:'#45e3ff', phos:'#6bffb0', amber:'#ffd23f', high:'#ff9f43', crit:'#ff2e55'};
-  const SOURCES = [
-    {n:'Netherlands', p:[4.9,52.37]}, {n:'United States', p:[-77.0,38.9]}, {n:'United States', p:[-122.3,37.7]},
-    {n:'China', p:[116.4,39.9]}, {n:'Russia', p:[37.6,55.75]}, {n:'Brazil', p:[-46.6,-23.5]},
-    {n:'Vietnam', p:[105.8,21.0]}, {n:'India', p:[77.2,28.6]}, {n:'Iran', p:[51.4,35.7]},
-    {n:'Germany', p:[8.68,50.11]}, {n:'Singapore', p:[103.8,1.35]}, {n:'Bulgaria', p:[23.3,42.7]},
-    {n:'South Korea', p:[127.0,37.5]}, {n:'Romania', p:[26.1,44.4]}
-  ];
-  const TRAFFIC = [{n:'Stockholm', p:[18.07,59.33]}, {n:'Frankfurt', p:[8.68,50.11]}, {n:'Amsterdam', p:[4.9,52.37]},
-    {n:'Ashburn', p:[-77.5,39.0]}, {n:'London', p:[-0.12,51.5]}];
-  const ATTACKS = [
-    {t:'Port scan', sev:'phos'}, {t:'Host sweep', sev:'phos'}, {t:'SSH brute force', sev:'amber'},
-    {t:'Router RCE attempt', sev:'crit'}, {t:'Log4j probe', sev:'high'}, {t:'Mirai login attempt', sev:'high'},
-    {t:'SMB exploit attempt', sev:'crit'}, {t:'HTTP directory traversal', sev:'amber'}, {t:'Telnet scan', sev:'phos'}
-  ];
-  const sevName = {phos:'Blocked', amber:'Medium', high:'High', crit:'Critical'};
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const canvas = document.getElementById('map');
-  const ctx = canvas.getContext('2d');
-  const land = topojson.feature(LAND, LAND.objects.land);
-  let proj, path, W, H, dpr, landImg;
-
-  function layout(){
-    const r = canvas.getBoundingClientRect();
-    dpr = Math.min(devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    canvas.width = W * dpr; canvas.height = H * dpr;
-    const frame = {type:'MultiPoint', coordinates:[[-125,-38],[150,-38],[-125,72],[150,72],[24,78]]};
-    proj = d3.geoNaturalEarth1().rotate([-12,0]).fitExtent([[10,10],[W-10,H-10]], frame);
-    // pre-render land once
-    landImg = document.createElement('canvas');
-    landImg.width = canvas.width; landImg.height = canvas.height;
-    const l = landImg.getContext('2d');
-    l.scale(dpr,dpr);
-    const p = d3.geoPath(proj, l);
-    l.beginPath(); p(land); l.fillStyle = '#12303f'; l.fill();
-    l.lineWidth = .6; l.strokeStyle = '#1d4a60'; l.stroke();
-    l.beginPath(); p(d3.geoGraticule10()); l.strokeStyle = 'rgba(69,227,255,.05)'; l.lineWidth = .5; l.stroke();
-  }
-
-  const arcs = [];
-  function addArc(from, color, toHome = true){
-    const a = proj(from), b = proj(HOME);
-    const s = toHome ? a : b, e = toHome ? b : a;
-    const mx = (s[0]+e[0])/2, my = (s[1]+e[1])/2;
-    const d = Math.hypot(e[0]-s[0], e[1]-s[1]);
-    const c = [mx, my - d*0.35];
-    arcs.push({s, e, c, color, t:0, speed: 0.6 + Math.random()*0.5, born: performance.now(), blocked: color !== C.ion});
-  }
-  const pt = (a,t) => { const u=1-t; return [u*u*a.s[0]+2*u*t*a.c[0]+t*t*a.e[0], u*u*a.s[1]+2*u*t*a.c[1]+t*t*a.e[1]]; };
-
-  function draw(now){
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(landImg,0,0);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    const home = proj(HOME);
-    for (let i = arcs.length-1; i >= 0; i--){
-      const a = arcs[i];
-      const age = (now - a.born)/1000;
-      a.t = reduce ? 1 : Math.min(1, age * a.speed / 1.6);
-      const fade = Math.max(0, 1 - Math.max(0, age - 3)/9);
-      if (fade <= 0){ arcs.splice(i,1); continue; }
-      const stop = a.blocked ? 0.94 : 1;           // attacks stop at the ring
-      const tEnd = Math.min(a.t, stop);
-      ctx.beginPath();
-      for (let k = 0; k <= 40; k++){ const q = pt(a, tEnd*k/40); k ? ctx.lineTo(q[0],q[1]) : ctx.moveTo(q[0],q[1]); }
-      ctx.strokeStyle = a.color; ctx.globalAlpha = 0.55*fade; ctx.lineWidth = 1.2; ctx.stroke();
-      if (a.t < 1 && !reduce){
-        const q = pt(a, tEnd); ctx.globalAlpha = 1;
-        ctx.beginPath(); ctx.arc(q[0],q[1],2.4,0,7); ctx.fillStyle = a.color; ctx.fill();
-      } else if (a.blocked && age*a.speed/1.6 < 1.5 && !reduce){
-        const q = pt(a, stop), r = 3 + (age*a.speed/1.6 - 1)*18;
-        ctx.globalAlpha = Math.max(0, .9 - (r-3)/18);
-        ctx.beginPath(); ctx.arc(q[0],q[1],Math.max(r,1),0,7); ctx.strokeStyle = a.color; ctx.lineWidth = 1.4; ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-    }
-    // home + shield ring
-    const pulse = reduce ? 0 : (Math.sin(now/600)+1)/2;
-    ctx.beginPath(); ctx.arc(home[0],home[1],13 + pulse*2,0,7); ctx.strokeStyle = 'rgba(69,227,255,.45)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.beginPath(); ctx.arc(home[0],home[1],3.4,0,7); ctx.fillStyle = '#d6ecf5'; ctx.fill();
-    ctx.font = '500 12px "IBM Plex Mono", monospace'; ctx.fillStyle = '#d6ecf5';
-    ctx.fillText('HOME', home[0]+18, home[1]-14);
-    if (!reduce) requestAnimationFrame(draw);
-  }
-
-  const feed = document.getElementById('feed');
-  const pick = arr => arr[Math.floor(Math.random()*arr.length)];
-  const fakeIp = () => pick(['198.51.100.','203.0.113.','192.0.2.']) + (2 + Math.floor(Math.random()*250));
-  const hhmmss = d => d.toTimeString().slice(0,8);
-  function attack(){
-    const src = pick(SOURCES), at = pick(ATTACKS);
-    addArc(src.p, C[at.sev]);
-    const li = document.createElement('li');
-    li.style.setProperty('--c', C[at.sev]);
-    li.innerHTML = `<time>${hhmmss(new Date())}</time><span>${at.t}<small>${sevName[at.sev]}, ${src.n}, ${fakeIp()}</small></span>`;
-    feed.prepend(li);
-    while (feed.children.length > 7) feed.lastChild.remove();
-  }
-  function traffic(){ addArc(pick(TRAFFIC).p, C.ion, Math.random() < .5); }
-
-  layout();
-  addEventListener('resize', () => { layout(); arcs.length = 0; if (reduce) seed(); });
-  function seed(){ for (let i=0;i<6;i++) attack(); for (let i=0;i<6;i++) traffic(); }
-  if (reduce){ seed(); draw(performance.now()); addEventListener('resize', () => draw(performance.now())); }
-  else {
-    for (let i=0;i<4;i++) setTimeout(attack, i*350);
-    setInterval(attack, 1900);
-    setInterval(traffic, 420);
-    requestAnimationFrame(draw);
-  }
-  const clock = document.getElementById('clock');
-  const tick = () => clock.textContent = hhmmss(new Date());
-  tick(); setInterval(tick, 1000);
-})();
-</script>
 </body>
 </html>
