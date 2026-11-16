@@ -193,6 +193,7 @@ h2{font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.005em;max-
 .pipe{font:500 15px/1.9 var(--data);color:var(--frost);margin:18px 0 0;padding:16px 18px;background:rgba(2,6,11,.6);border-left:2px solid var(--ion);overflow-x:auto;white-space:nowrap}
 .pipe span{color:var(--mute)}
 .pipe b{color:var(--ion);font-weight:500}
+.fits .it{margin-top:18px;padding:14px 16px;border-left:2px solid var(--ion);background:rgba(2,6,11,.6);font-size:15px;color:var(--mute)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .chips span{font:500 13px var(--data);color:var(--frost);padding:6px 10px;box-shadow:inset 0 0 0 1px var(--wire)}
 
@@ -281,7 +282,7 @@ footer .sp{flex:1}
       </article>
     </div>
     <div class="compare">
-      <div><b>A managed SOC service</b><p>Built and priced for large organisations, with contracts to match.</p></div>
+      <div><b>A security company watching for you</b><p>Built and priced for large organisations, with contracts to match.</p></div>
       <div><b>A full-time security specialist</b><p>A full salary, and still only one person who sleeps at night.</p></div>
       <div class="us"><b>Northwatch</b><p>A monthly subscription that watches around the clock and tells you, in plain words, when to act.</p></div>
     </div>
@@ -291,16 +292,13 @@ footer .sp{flex:1}
 <section id="how">
   <div class="wrap">
     <p class="kicker">How it works</p>
-    <h2>Firewall, DNS and sensors. One box.</h2>
-    <p class="intro">No single source sees everything. Northwatch combines what your firewall, your DNS and its own sensors see, connects the dots, and tells you only what matters. Everything comes in one package that runs on a small box in your network.</p>
-    <div class="sources">
-      <div class="panel src"><p class="sl">Firewall</p><h3>Every connection and every blocked attack</h3><p>Read from your firewall's <code>syslog</code>, whatever the brand. Scans, break-in attempts and traffic to and from every device.</p></div>
-      <div class="panel src"><p class="sl">DNS</p><h3>Every name your devices look up</h3><p>Spyware and malware domains, random-looking names that malware generates, and data smuggled out through DNS.</p></div>
-      <div class="panel src"><p class="sl">Sensors</p><h3>Eyes inside your network</h3><p>A decoy device that nobody has a reason to touch, so anyone who does is snooping. A connection watch that notices when your internet goes down. The Wi-Fi controller that names your devices and can take one offline.</p></div>
-    </div>
-    <div class="flow" aria-label="How the sources become a decision">
-      <span>Firewall + DNS + sensors</span><i aria-hidden="true"></i><span class="hub">Northwatch connects the dots</span><i aria-hidden="true"></i><span>One clear alarm</span><i aria-hidden="true"></i><span class="you">You decide</span>
-    </div>
+    <h2>It watches, it understands, it tells you.</h2>
+    <p class="intro">Northwatch comes as one small box that you plug into your network. From then on it keeps watch day and night, and you hear from it only when something needs you.</p>
+    <ol class="steps">
+      <li class="panel"><h3>It watches</h3><p>Everything that comes in and goes out of your network, and what your devices do inside it. Quietly, around the clock.</p></li>
+      <li class="panel"><h3>It understands</h3><p>Thousands of knocks on the door every day are normal, and they are stopped. A device in your home talking to criminals is not. Northwatch knows the difference.</p></li>
+      <li class="panel"><h3>It tells you</h3><p>What happened, on which device and what to do, in plain words. You decide. One click and the device is off your network.</p></li>
+    </ol>
   </div>
 </section>
 
@@ -310,11 +308,11 @@ footer .sp{flex:1}
       <div class="txt">
         <p class="kicker">A real case</p>
         <h2>The projector that phoned home.</h2>
-        <p>A cheap Android projector joined a home Wi-Fi on a Sunday evening. Within seconds it started looking up spyware servers, twice a second, without pause. The firewall blocked almost all of them. Northwatch noticed the pattern and raised the alarm.</p>
+        <p>A cheap Android projector joined a home Wi-Fi on a Sunday evening. Within seconds it started trying to contact a spyware server, twice a second, without pause. The firewall blocked almost all of them. Northwatch noticed the pattern and raised the alarm.</p>
         <ol class="tl">
           <li><time>21:04:10</time>The projector joins the Wi-Fi.</li>
-          <li><time>21:04:13</time>It starts asking for a spyware server.</li>
-          <li><time>21:04:41</time>It tries to get around the firewall's DNS filter.</li>
+          <li><time>21:04:13</time>It starts calling a spyware server.</li>
+          <li><time>21:04:41</time>It tries to sneak past the firewall's protection.</li>
           <li class="hot"><time>21:04:42</time>Northwatch opens Case #1 and raises the alarm.</li>
           <li class="ok"><time>21:05:53</time>One click: the projector is off the network.</li>
         </ol>
@@ -331,13 +329,13 @@ footer .sp{flex:1}
       <div class="txt">
         <p class="kicker">Plain language</p>
         <h2>An answer, not a wall of codes.</h2>
-        <p>Every case collects its own evidence: the device, what it did, when and how often. On request, an AI reads the evidence and writes what most likely happened and how sure it can be.</p>
+        <p>Every alarm comes with the whole story: which device, what it did, when and how often. If you want, an AI reads it through and explains what most likely happened and how sure it can be.</p>
         <ul class="ticks">
           <li><span class="tag now">Now</span>Isolate the projector from the rest of the network.</li>
           <li><span class="tag soon">Soon</span>Change the passwords of accounts used on it.</li>
           <li><span class="tag later">Later</span>Replace it with a device from a known maker.</li>
         </ul>
-        <p style="margin-top:8px">Before anything is sent, you see exactly what leaves your network. Addresses inside your home or office are replaced with aliases.</p>
+        <p style="margin-top:8px">The AI is optional. Before anything is sent, you see exactly what would leave your network, and details about your home or office are hidden.</p>
       </div>
     </div>
   </div>
@@ -349,12 +347,12 @@ footer .sp{flex:1}
       <div class="txt">
         <p class="kicker">Your network at a glance</p>
         <h2>Every device, in its place.</h2>
-        <p>Phones, computers, TVs, smart home gear and network equipment, grouped on one radar. Northwatch learns what is normal and points at what isn't.</p>
+        <p>Phones, computers, TVs and smart home gear, each in its own group. Northwatch learns what is normal for your network and points at what isn't.</p>
         <ul class="ticks">
           <li><b>New devices</b> the moment they join.</li>
-          <li><b>Devices that skip your DNS filter</b> and talk to the internet directly.</li>
-          <li><b>Scanning inside your network</b>, the first sign of an intruder moving around.</li>
-          <li><b>Contact with known botnet and malware servers</b>, checked against public threat lists.</li>
+          <li><b>Devices that try to sneak around</b> your security settings.</li>
+          <li><b>Someone looking around inside your network</b>, the first sign of an intruder.</li>
+          <li><b>Devices talking to known criminal servers.</b></li>
         </ul>
       </div>
       <figure class="shot"><div class="panel"><img loading="lazy" src="img/nw-radar.webp" width="1400" height="1195" alt="Northwatch home network radar with the firewall in the centre and devices grouped into computers, phones and tablets, TV and media, smart home and network equipment"></div><figcaption>The home network radar.</figcaption></figure>
@@ -364,15 +362,15 @@ footer .sp{flex:1}
 
 <section id="watch">
   <div class="wrap">
-    <p class="kicker">What it watches</p>
-    <h2>Everything your firewall sees, finally read.</h2>
+    <p class="kicker">What it keeps an eye on</p>
+    <h2>The things you would want to know.</h2>
     <div class="watch">
-      <div class="panel"><h3><i style="background:var(--ion)"></i>Traffic</h3><p>Every connection in and out on a live world map, with history from one hour to seven days.</p></div>
-      <div class="panel"><h3><i style="background:var(--flare)"></i>Attacks</h3><p>Blocked intrusion attempts sorted by severity and attack stage, checked against public threat intelligence.</p></div>
-      <div class="panel"><h3><i style="background:#c77dff"></i>Devices</h3><p>New, unusual and suspicious devices inside your network, with names you recognise.</p></div>
-      <div class="panel"><h3><i style="background:var(--amber)"></i>DNS</h3><p>Lookup storms, random-looking domain names and DNS tunnelling, per device.</p></div>
-      <div class="panel"><h3><i style="background:var(--phos)"></i>Internet link</h3><p>Outages and availability over 24 hours, 7 days and 30 days, and a warning when the line is full.</p></div>
-      <div class="panel"><h3><i style="background:var(--snow)"></i>Alarms</h3><p>On screen, on your phone and in your smart home. If nobody reacts to a serious alarm, Northwatch calls you.</p></div>
+      <div class="panel"><h3><i style="background:var(--flare)"></i>Who's knocking</h3><p>Break-in attempts from the internet, stopped and shown on a map. You can look whenever you're curious.</p></div>
+      <div class="panel"><h3><i style="background:var(--amber)"></i>Devices acting strangely</h3><p>A TV, camera or gadget that suddenly talks to places it shouldn't.</p></div>
+      <div class="panel"><h3><i style="background:#c77dff"></i>New devices</h3><p>You know the moment something new joins your network, with a name you can recognise.</p></div>
+      <div class="panel"><h3><i style="background:var(--ion)"></i>Snoopers inside</h3><p>If someone on your network starts looking around where they shouldn't, you hear about it.</p></div>
+      <div class="panel"><h3><i style="background:var(--phos)"></i>Your internet connection</h3><p>When it goes down, and how reliable it really is over a day, a week and a month.</p></div>
+      <div class="panel"><h3><i style="background:var(--snow)"></i>Alarms that reach you</h3><p>On your screen, your phone and your smart home. If nobody reacts to a serious alarm, Northwatch calls you.</p></div>
     </div>
   </div>
 </section>
@@ -380,20 +378,21 @@ footer .sp{flex:1}
 <section id="fits">
   <div class="wrap">
     <p class="kicker">Works with your firewall</p>
-    <h2>If it can send syslog, we want to read it.</h2>
+    <h2>Works with the firewall you already have.</h2>
     <div class="fits">
       <div class="panel">
-        <h3>Vendor-agnostic by design</h3>
-        <p>Northwatch is not tied to any brand. Each firewall's log format is read by its own small module, and everything after that is shared. Our goal is to support as many firewalls as possible: if yours can send its logs over syslog, Northwatch can most likely read it. Tell us your model and we'll add it.</p>
-        <div class="pipe">firewall <span>&rarr;</span> syslog <span>&rarr;</span> <b>northwatch</b> <span>&rarr;</span> map, cases, alarms</div>
+        <h3>Not tied to any brand</h3>
+        <p>Most business firewalls, and many home ones, can share what they see. Northwatch understands them whatever the brand, and we keep adding more. Tell us which one you have and we'll make sure it works.</p>
+        <p class="it">For your IT person: Northwatch reads the firewall's standard syslog. No software on your computers, no changes to how your network works.</p>
       </div>
       <div class="panel">
-        <h3>What it can use</h3>
-        <p>The more it can see, the more it can tell you. The firewall log is the start; DNS and the sensors come in the same package.</p>
-        <div class="chips">
-          <span>Traffic logs</span><span>Threat and intrusion logs</span><span>Admin logins</span><span>DNS lookups</span><span>Decoy sensor</span><span>Connection watch</span><span>Wi-Fi controller</span><span>Device isolation</span><span>Interface counters</span><span>Smart home</span><span>Phone call alarms</span>
-        </div>
-        <p style="margin-top:20px">Runs in one container on a small box in your network. Raw logs are never written to disk, only counters and cases, kept for eight days. Nothing is opened to the internet.</p>
+        <h3>Stays in your network</h3>
+        <ul class="ticks">
+          <li>One small box in your network.</li>
+          <li>Your data stays at home or in the office. Nothing is opened to the internet.</li>
+          <li>Keeps only what it needs to warn you, for about a week.</li>
+          <li>One affordable monthly price.</li>
+        </ul>
       </div>
     </div>
   </div>
