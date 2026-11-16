@@ -218,6 +218,12 @@ h2{font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.005em;max-
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .chips span{font:500 13px var(--data);color:var(--frost);padding:6px 10px;box-shadow:inset 0 0 0 1px var(--wire)}
 
+/* trust strip */
+.trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,4vw,44px);border-top:1px solid var(--edge);padding-top:32px}
+@media (max-width:900px){.trust{grid-template-columns:minmax(0,1fr)}}
+.trust h3{font-size:22px;margin:0 0 8px;color:var(--ion)}
+.trust p{font-size:17px;margin:0}
+
 /* contact */
 .contact{margin-top:clamp(72px,10vw,128px);padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--edge);
   background:radial-gradient(ellipse at 20% 0%,rgba(69,227,255,.10),transparent 55%)}
@@ -242,7 +248,6 @@ footer .sp{flex:1}
       <a href="#who">Who it's for</a>
       <a href="#how">How it works</a>
       <a href="#case">A real case</a>
-      <a href="#fits">Your firewall</a>
       <a class="lang" href="../" hreflang="fi" lang="fi">FI</a>
       <a class="cta" href="#contact">Get early access</a>
     </nav>
@@ -313,7 +318,7 @@ footer .sp{flex:1}
   <div class="wrap">
     <p class="kicker">How it works</p>
     <h2>It watches, it understands, it tells you.</h2>
-    <p class="intro">Northwatch runs on a small computer in your network, such as a mini PC or a home server. You use your own, and we tell you which models work well. From then on it keeps watch day and night, and you hear from it only when something needs you.</p>
+    <p class="intro">Once Northwatch is set up in your network, it keeps watch day and night, and you hear from it only when something needs you.</p>
     <ol class="steps">
       <li class="panel"><h3>It watches</h3><p>Everything that comes in and goes out of your network, and what your devices do inside it. Quietly, around the clock.</p></li>
       <li class="panel"><h3>It understands</h3><p>Thousands of knocks on the door every day are normal, and they are stopped. A device in your home talking to criminals is not. Northwatch knows the difference.</p></li>
@@ -400,25 +405,12 @@ footer .sp{flex:1}
   </div>
 </section>
 
-<section id="fits">
+<section id="trust">
   <div class="wrap">
-    <p class="kicker">Works with your firewall</p>
-    <h2>Works with the firewall you already have.</h2>
-    <div class="fits">
-      <div class="panel">
-        <h3>Not tied to any brand</h3>
-        <p>Most business firewalls, and many home ones, can share what they see. Northwatch understands them whatever the brand, and we keep adding more. Tell us which one you have and we'll make sure it works.</p>
-        <p class="it">For your IT person: Northwatch reads the firewall's standard syslog. No software on your computers, no changes to how your network works.</p>
-      </div>
-      <div class="panel">
-        <h3>Stays in your network</h3>
-        <ul class="ticks">
-          <li>Runs on your own small computer. We recommend models that work well.</li>
-          <li>Your data stays at home or in the office. Nothing is opened to the internet.</li>
-          <li>Keeps only what it needs to warn you, for about a week.</li>
-          <li>One affordable monthly price for the service.</li>
-        </ul>
-      </div>
+    <div class="trust">
+      <div><h3>Works with what you have</h3><p>No new network and no new equipment to learn. Northwatch works alongside the firewall you already use.</p></div>
+      <div><h3>Your data stays with you</h3><p>Everything stays in your home or office. Nothing is opened to the internet.</p></div>
+      <div><h3>One monthly price</h3><p>No big upfront costs, no contracts written for corporations and no IT department needed.</p></div>
     </div>
   </div>
 </section>
@@ -428,7 +420,7 @@ footer .sp{flex:1}
   <div class="wrap">
     <p class="kicker">Early access</p>
     <h2>Want it watching your network?</h2>
-    <p class="intro">Northwatch is in early access for homes and small businesses in Finland. Tell us which firewall you have and we'll set up a demo on your own network.</p>
+    <p class="intro">Northwatch is in early access for homes and small businesses in Finland. Send us a message and we'll tell you more and show it working on your own network.</p>
     <div class="ctas">
       <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20early%20access">Email hello@rootsec.fi</a>
     </div>

@@ -218,6 +218,12 @@ h2{font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.005em;max-
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .chips span{font:500 13px var(--data);color:var(--frost);padding:6px 10px;box-shadow:inset 0 0 0 1px var(--wire)}
 
+/* trust strip */
+.trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,4vw,44px);border-top:1px solid var(--edge);padding-top:32px}
+@media (max-width:900px){.trust{grid-template-columns:minmax(0,1fr)}}
+.trust h3{font-size:22px;margin:0 0 8px;color:var(--ion)}
+.trust p{font-size:17px;margin:0}
+
 /* contact */
 .contact{margin-top:clamp(72px,10vw,128px);padding:clamp(56px,8vw,96px) 0;border-top:1px solid var(--edge);
   background:radial-gradient(ellipse at 20% 0%,rgba(69,227,255,.10),transparent 55%)}
@@ -242,7 +248,6 @@ footer .sp{flex:1}
       <a href="#who">Kenelle</a>
       <a href="#how">Miten se toimii</a>
       <a href="#case">Tositapaus</a>
-      <a href="#fits">Palomuuri</a>
       <a class="lang" href="en/" hreflang="en" lang="en">EN</a>
       <a class="cta" href="#contact">Pyydä esittely</a>
     </nav>
@@ -313,7 +318,7 @@ footer .sp{flex:1}
   <div class="wrap">
     <p class="kicker">Miten se toimii</p>
     <h2>Se valvoo, ymmärtää ja kertoo.</h2>
-    <p class="intro">Northwatch toimii pienellä tietokoneella verkossasi, esimerkiksi minitietokoneella tai kotipalvelimella. Käytät omaa laitettasi, ja me kerromme, mitkä mallit toimivat hyvin. Siitä lähtien se valvoo yötä päivää, ja kuulet siitä vain, kun jokin vaatii sinua.</p>
+    <p class="intro">Kun Northwatch on otettu käyttöön verkossasi, se valvoo yötä päivää, ja kuulet siitä vain, kun jokin vaatii sinua.</p>
     <ol class="steps">
       <li class="panel"><h3>Se valvoo</h3><p>Kaikkea, mikä tulee verkkoosi ja lähtee sieltä, ja sitä, mitä laitteesi tekevät verkon sisällä. Hiljaa, ympäri vuorokauden.</p></li>
       <li class="panel"><h3>Se ymmärtää</h3><p>Tuhannet koputukset oveen joka päivä ovat tavallisia, ja ne pysäytetään. Kotisi laite, joka juttelee rikollisten kanssa, ei ole tavallista. Northwatch tietää eron.</p></li>
@@ -400,25 +405,12 @@ footer .sp{flex:1}
   </div>
 </section>
 
-<section id="fits">
+<section id="trust">
   <div class="wrap">
-    <p class="kicker">Toimii palomuurisi kanssa</p>
-    <h2>Toimii palomuurin kanssa, joka sinulla jo on.</h2>
-    <div class="fits">
-      <div class="panel">
-        <h3>Ei sidottu mihinkään merkkiin</h3>
-        <p>Useimmat yritysten ja monet kotien palomuurit osaavat jakaa sen, mitä ne näkevät. Northwatch ymmärtää niitä merkistä riippumatta, ja tuettuja tulee koko ajan lisää. Kerro, mikä palomuuri sinulla on, niin varmistamme, että se toimii.</p>
-        <p class="it">IT-henkilöllesi: Northwatch lukee palomuurin tavallista syslogia. Ei ohjelmia tietokoneille eikä muutoksia verkon toimintaan.</p>
-      </div>
-      <div class="panel">
-        <h3>Pysyy verkossasi</h3>
-        <ul class="ticks">
-          <li>Toimii omalla pienellä tietokoneellasi. Suosittelemme hyviksi todettuja malleja.</li>
-          <li>Tietosi pysyvät kotona tai toimistolla. Mitään ei avata internetiin.</li>
-          <li>Säilyttää vain sen, mitä tarvitsee varoittaakseen sinua, noin viikon ajan.</li>
-          <li>Yksi edullinen kuukausihinta palvelusta.</li>
-        </ul>
-      </div>
+    <div class="trust">
+      <div><h3>Toimii nykyisten laitteidesi kanssa</h3><p>Ei uutta verkkoa eikä uusia laitteita opeteltavaksi. Northwatch toimii sen palomuurin rinnalla, joka sinulla jo on.</p></div>
+      <div><h3>Tietosi pysyvät sinulla</h3><p>Kaikki pysyy kotona tai toimistolla. Mitään ei avata internetiin.</p></div>
+      <div><h3>Yksi kuukausihinta</h3><p>Ei isoja aloituskuluja, ei suuryrityksille kirjoitettuja sopimuksia eikä omaa IT-osastoa.</p></div>
     </div>
   </div>
 </section>
@@ -428,7 +420,7 @@ footer .sp{flex:1}
   <div class="wrap">
     <p class="kicker">Ennakkokäyttö</p>
     <h2>Haluatko Northwatchin vahtimaan verkkoasi?</h2>
-    <p class="intro">Northwatch on ennakkokäytössä suomalaisille kodeille ja pienyrityksille. Kerro, mikä palomuuri sinulla on, niin näytämme Northwatchin toiminnassa omassa verkossasi.</p>
+    <p class="intro">Northwatch on ennakkokäytössä suomalaisille kodeille ja pienyrityksille. Lähetä viesti, niin kerromme lisää ja näytämme Northwatchin toiminnassa omassa verkossasi.</p>
     <div class="ctas">
       <a class="btn solid" href="mailto:hello@rootsec.fi?subject=Northwatch%20esittely">Kirjoita: hello@rootsec.fi</a>
     </div>
