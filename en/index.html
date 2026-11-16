@@ -3,17 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Northwatch</title>
 <meta name="description" content="Northwatch watches your business network around the clock, raises the alarm only when something real happens and explains it in plain language. Affordable enough for home networks too. Monthly subscription.">
-<meta property="og:title" content="Northwatch: a security operations centre for the rest of us">
+<meta property="og:title" content="Northwatch: your network, watched day and night">
 <meta property="og:description" content="Real alarms, plain language, one click to act. For businesses, and home networks too.">
-<meta property="og:image" content="../img/nw-map.webp">
+<meta property="og:image" content="https://northwatch.fi/img/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" hreflang="fi" href="https://northwatch.fi/">
 <link rel="alternate" hreflang="en" href="https://northwatch.fi/en/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2302060b'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Cpath d='M16 16 23 9' stroke='%2345e3ff' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='2.6' fill='%23d6ecf5'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../fonts/fonts.css">
 <style>
 /* Northwatch: the product's own situation-room look. Abyss + ion cyan; alarm colours only where an alarm is shown. */
 :root{
@@ -291,17 +293,17 @@ footer .sp{flex:1}
     <p class="intro">Large companies pay security experts to watch their network around the clock. Small and medium-sized businesses face the same attacks, from the same places, without anyone watching. Northwatch closes that gap.</p>
     <div class="who">
       <article>
-        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1753351051161-21de8728ec17?w=1000&q=75&auto=format&fit=crop" alt="A café owner smiling and holding a sign that says we're open"></div>
+        <div class="ph"><img loading="lazy" src="../img/who-1.webp" alt="A café owner smiling and holding a sign that says we're open"></div>
         <h3>Small businesses</h3>
         <p>The shop, café, clinic or office without an IT department. Card terminals, cameras and guest Wi-Fi on one network, watched while you run the business.</p>
       </article>
       <article>
-        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1603201667230-bd139210db18?w=1000&q=75&auto=format&fit=crop" alt="A small team gathered around a laptop in an office"></div>
+        <div class="ph"><img loading="lazy" src="../img/who-2.webp" alt="A small team gathered around a laptop in an office"></div>
         <h3>Growing companies</h3>
         <p>Teams that take security seriously but can't justify a 24/7 security team or a full-time specialist. Northwatch does the watching; your IT person gets the evidence.</p>
       </article>
       <article>
-        <div class="ph"><img loading="lazy" src="https://images.unsplash.com/photo-1758687125679-d000e186e09b?w=1000&q=75&auto=format&fit=crop" alt="A father and son smiling on a sofa at home"></div>
+        <div class="ph"><img loading="lazy" src="../img/who-3.webp" alt="A father and son smiling on a sofa at home"></div>
         <h3>Home networks too</h3>
         <p>Thanks to the low price, Northwatch also suits a demanding home network: smart TVs, kids' tablets and cheap gadgets, watched like an office.</p>
       </article>
@@ -385,7 +387,7 @@ footer .sp{flex:1}
           <li><b>Devices talking to known criminal servers.</b></li>
         </ul>
       </div>
-      <figure class="shot"><div class="panel"><img loading="lazy" src="../img/nw-radar.webp" width="1400" height="1195" alt="Northwatch network radar with the firewall in the centre and devices grouped into computers, phones and tablets, TV and media, smart home and network equipment"></div><figcaption>The network radar.</figcaption></figure>
+      <figure class="shot"><div class="panel"><img loading="lazy" src="../img/nw-radar.webp" width="1400" height="1105" alt="Northwatch network radar with the firewall in the centre and devices grouped into computers, phones and tablets, TV and media, smart home and network equipment"></div><figcaption>The network radar.</figcaption></figure>
     </div>
   </div>
 </section>
